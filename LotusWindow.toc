@@ -1,0 +1,9 @@
+## Interface: 11200
+## Title: LotusWindow
+## Version: 1.0.0
+## Notes: An addon for tracking the Lotus spawn timers
+## Author: Voodoomoose
+## SavedVariables: burning_steppes_t, winterspring_t, eastern_plaguelands_t, silithus_t
+LotusWindow.lua
+LotusWindow.xml
+Helpers.lua
