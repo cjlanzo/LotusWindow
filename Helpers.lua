@@ -1,108 +1,62 @@
-function ParseSetArgs(args)
-	return string.match(args, "set (%a+%s*%a*) (%d+:%d+%a+)")
-end
+local function ConvertTimerToDisplay(timer)
+	local hours = math.floor(timer / MINUTES_IN_AN_HOUR)
+	local minutes = timer % MINUTES_IN_AN_HOUR
+	local ampm = (hours >= 12 and "PM" or "AM")
 
-function ParseAdjustArgs(args)
-	return string.match(args, "adjust (%a+%s*%a*) ([%d-]+)")
-end
-
-function ParseClearArgs(args)
-	return string.match(args, "clear (%a+%s*%a*)")
-end
-
-function ParseTimerStr(str)
-	local h,m,q = string.match(str, "(%d+):(%d+)(%a+)")
-	
-	local t = (h*100) + m
-	
-	if (t >= 1200) then
-		t = t - 1200
+	if hours >= 12 then
+		hours = hours - 12
 	end
-	
-	if (string.upper(q) == "PM") then
-		t = t + 1200
+	if hours == 0 then
+		hours = 12
 	end
-	
-	return t
+
+	return string.format("%d:%02d%s", hours, minutes, ampm)
 end
 
-function DisplayAsTime(t)
-	local t_m = math.fmod(t,100)
-	local t_h = t - t_m
-	local ampm = "AM"
-	
-	if t_h >= 1200 then
-		if (t_h < 2400) then
-			ampm = "PM"
+function DisplayTimerForZone(zone)
+	if timers[zone] ~= nil then
+
+		local timer = timers[zone]
+		local open = nil
+		local close = nil
+
+		if cache[timer] ~= nil then
+			open = cache[timer][1]
+			close = cache[timer][2]
+		else
+			open = (timer + 45) % MINUTES_IN_A_DAY
+			close = (timer + 75) % MINUTES_IN_A_DAY
+
+			cache[timer] = { open, close }
 		end
-		
-		t_h = t_h - 1200
-	end
-	
-	if t_h < 100 then
-		t_h = t_h + 1200
-	end
-	
-	t_h = t_h / 100
-	
-	return string.format("%d:%02d%s", t_h, t_m, ampm)
-end
 
-function AddTime(t,m)
-	local t_m = math.fmod(t,100)
-	
-	if t_m + m >= 60 then
-		t = t + m + 40
-		
-		t_m = math.fmod(t,100)
-		
-		if t_m >= 60 then
-			t = t + 40
-		end
+		print(zone.." - Picked "..ConvertTimerToDisplay(timer).." - Opens "..ConvertTimerToDisplay(open).." - Closes "..ConvertTimerToDisplay(close))
 	else
-		t = t + m
+		print("You do not have the timer for "..zone)
 	end
-	
-	return t
-end
-
-function CreateExportString(zone,t)
-	return string.format("%s:%d", zone, t)
-end
-
-function ImportTimer(importStr)
-	local zone, timer = string.match(importStr, "(%a+%s*%a*):([%d-]+)")
-	return zone, tonumber(timer)
-end
-
-function GetCurrentTime()
-	local h,m = GetGameTime()
-	
-	return (h*100) + m
 end
 
 function ValidateZone(zone)
-	local upper_zone = string.upper(zone)
-	
-	if (upper_zone == string.upper(BURNING_STEPPES)) then
-		return BURNING_STEPPES
-	elseif (upper_zone == string.upper(WINTERSPRING)) then
-		return WINTERSPRING
-	elseif (upper_zone == string.upper(EASTERN_PLAGUELANDS)) then
-		return EASTERN_PLAGUELANDS
-	elseif (upper_zone == string.upper(SILITHUS)) then
-		return SILITHUS
-	elseif (upper_zone == string.upper(ALL)) then
-		return ALL
-	else
-		return false
+	for i = 1, #VALID_ZONES do
+		if string.upper(zone) == string.upper(VALID_ZONES[i]) then
+			return VALID_ZONES[i]
+		end
 	end
+
+	print(zone.." is not a valid zone")
+	return nil
 end
 
-function IsWindowDefined(t)
-	if t["timer"] == -1 then
-		return false
-	else
-		return true
-	end
+function CalculateTimer(hours, minutes)
+	return (hours * 60) + minutes
+end
+
+function UpdateTimerForZone(zone, timer)
+	timers[zone] = timer
+end
+
+function SendUpdate(zone)
+	local exportStr = string.format("%s:%d", zone, timers[zone])
+	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "GUILD")
+	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "PARTY")
 end
