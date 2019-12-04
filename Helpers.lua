@@ -52,14 +52,10 @@ function CalculateTimer(hours, minutes)
 end
 
 function UpdateTimerForZone(zone, timer)
-	local date = os.date("*t") -- possibly time zone issues here?
-	local hour, minute, second = date.hour, date.min, date.sec
-	local year, month, day = date.year, date.month, date.wday
-	local datestamp = string.format("%d%d%d%d%d%d", year, month, day, hour, minute, second)
-	local updated = tonumber(datestamp)
+	local date = date("%y:%m:%d:%H:%M:%S")
 
 	timers[zone] = timer
-	lastUpdated[zone] = updated
+	lastUpdated[zone] = date
 end
 
 local function CreateVersionedPrefix(prefix)
@@ -79,4 +75,30 @@ function SendRequest(zone)
 
 	C_ChatInfo.SendAddonMessage(versionedPrefix, zone, "GUILD")
 	C_ChatInfo.SendAddonMessage(versionedPrefix, zone, "PARTY")
+end
+
+function IsMoreRecent(date1, date2)
+
+	local function CompareDate(date1, date2)
+		if #date1 == 0 then 
+			return false
+		end
+		
+		local val1 = tonumber(string.sub(date1, 1, 2))
+		local val2 = tonumber(string.sub(date2, 1, 2))
+
+		if val1 > val2 then
+			return true
+		elseif val2 > val1 then
+			return false
+		else
+			local rem1 = string.sub(date1, 4, #date1)
+			local rem2 = string.sub(date2, 4, #date2)
+
+			CompareDate(rem1, rem2)
+		end
+
+	end
+	
+	return CompareDate(date1, date2)
 end

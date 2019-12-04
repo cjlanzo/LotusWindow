@@ -16,7 +16,6 @@ function HandleChatMsgLoot(args)
 end
 
 function HandleChatMsgAddon(args)
-    -- might need to move this to a separate function if you can't nest
     local function GetVersionComponents(version)
         return string.match(version, "(%d+).(%d+).(%d+)")
     end
@@ -30,7 +29,6 @@ function HandleChatMsgAddon(args)
     local major, minor, patch = GetVersionComponents(incomingVersion)
     local currentMajor, currentMinor, currentPatch = GetVersionComponents(ADDON_VERSION)
 
-    -- this might not be how to negate things
     if -displayedUpdateMessage and ConvertVersionToNumber(incomingVersion) > ConvertVersionToNumber(ADDON_VERSION) then
         displayedUpdateMessage = true
         print("An update for LotusWindow is available")
@@ -40,9 +38,9 @@ function HandleChatMsgAddon(args)
         if major > currentMajor then
             print("Incoming addon message uses an incompatible version of LotusWindow")
         else 
-            local zone, timer, updated = string.match(payload, "(%a+%s*%a*):([%d-]+):(%d+)")
+            local zone, timer, updated = string.match(payload, "(%a+%s*%a*):([%d-]+):([%d:]+)")
             
-            if updated > lastUpdated[zone] then
+            if IsMoreRecent(updated, lastUpdated[zone]) then
                 timers[zone] = timer
                 lastUpdated[zone] = updated
 

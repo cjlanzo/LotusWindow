@@ -17,6 +17,9 @@ function HandleCmdUpdate(args)
         local z, timeStr = string.match(args, "update (%a+%s*%a*) (%d+:%d+%a+)")
         local hours, minutes, ampm = string.match(timeStr, "(%d+):(%d+)(%a+)")
 
+        hours = tonumber(hours)
+        minutes = tonumber(minutes)
+
         if hours == 12 then
             hours = 0
         end
@@ -47,14 +50,14 @@ function HandleCmdClear(args)
     zone = ValidateZone(zone)
 
     if zone == ALL then
-        timers[WINTERSPRING] = nil
-        timers[BURNING_STEPPES] = nil
-        timers[EASTERN_PLAGUELANDS] = nil
-        timers[SILITHUS] = nil
+        UpdateTimerForZone(WINTERSPRING, nil)
+        UpdateTimerForZone(BURNING_STEPPES, nil)
+        UpdateTimerForZone(EASTERN_PLAGUELANDS, nil)
+        UpdateTimerForZone(SILITHUS, nil)
 
         print("Cleared timers for all zones!")
     else
-        timers[zone] = nil
+        UpdateTimerForZone(zone, nil)
 
         print("Cleared timer for "..zone)
     end
