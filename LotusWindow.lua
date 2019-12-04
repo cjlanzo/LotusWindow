@@ -30,7 +30,6 @@ end
 function SlashCmdList.LotusWindow(args)	
 	if pcall(HandleSlashCommands, args) == false then
 	end
-	HandleSlashCommands(args)
 end
 
 local function HandleEvents(self, event, ...)
