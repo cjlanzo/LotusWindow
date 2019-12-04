@@ -30,7 +30,9 @@ function HandleChatMsgAddon(args)
     local major, minor, patch = GetVersionComponents(incomingVersion)
     local currentMajor, currentMinor, currentPatch = GetVersionComponents(ADDON_VERSION)
 
-    if ConvertVersionToNumber(incomingVersion) > ConvertVersionToNumber(ADDON_VERSION) then
+    -- this might not be how to negate things
+    if -displayedUpdateMessage and ConvertVersionToNumber(incomingVersion) > ConvertVersionToNumber(ADDON_VERSION) then
+        displayedUpdateMessage = true
         print("An update for LotusWindow is available")
     end
 
