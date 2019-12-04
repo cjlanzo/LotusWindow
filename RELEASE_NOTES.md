@@ -1,3 +1,10 @@
+## 3.0.0 (12/05/2019)
+
+- Added code to notify user that an update is available
+- Made it so addon must share major version with other copies that it is interacting with
+- Added ability to request timers from party/guild members
+- Added datestamp for when timers were updated. Syncing with others will now use whoever has the most recent datestamp for a timer
+
 ## 2.0.0 (12/04/2019)
 
 - Re-wrote code be broken down into more concise groupings across multiple files

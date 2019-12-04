@@ -9,6 +9,7 @@ local function PrintUsage()
 	print("/lw adjust [zone] [min] - Adjust the timer for the specified zone. Time in minutes and can be negative")
 	print("/lw clear [all|zone] - Clears the timer for the specified zone")
 	print("/lw broadcast - Broadcasts all timers to the guild and party")
+	print("/lw request [all|zone] - Requests others to share their timers with you. Can specify a single zone if you don't want them all")
 end
 
 local function HandleSlashCommands(args)
@@ -18,10 +19,12 @@ local function HandleSlashCommands(args)
 		HandleCmdUpdate(args)
 	elseif string.find(args, "adjust") then
 		HandleCmdAdjust(args)
-	elseif string.find(args, "broadcast") then
-		HandleCmdBroadcast(args)
 	elseif string.find(args, "clear") then
 		HandleCmdClear(args)
+	elseif string.find(args, "broadcast") then
+		HandleCmdBroadcast(args)
+	elseif string.find(args, "request") then
+		HandleCmdRequest(args)
 	else
 		PrintUsage()
 	end

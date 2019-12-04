@@ -5,3 +5,9 @@ timers[EASTERN_PLAGUELANDS] = nil
 timers[SILITHUS] = nil
 
 cache = {}
+
+lastUpdated = {}
+lastUpdated[WINTERSPRING] = nil
+lastUpdated[BURNING_STEPPES] = nil
+lastUpdated[EASTERN_PLAGUELANDS] = nil
+lastUpdated[SILITHUS] = nil

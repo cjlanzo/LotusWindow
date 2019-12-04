@@ -37,18 +37,9 @@ end
 function HandleCmdAdjust(args)
     local zone, minutes = string.match(args, "adjust (%a+%s*%a*) ([%d-]+)")
     zone = ValidateZone(zone)
-    timers[zone] = timers[zone] + minutes
+    UpdateTimerForZone(zone, (timers[zone] + minutes))
     SendUpdate(zone)
     DisplayTimerForZone(zone)
-end
-
-function HandleCmdBroadcast(args)
-    SendUpdate(WINTERSPRING)
-    SendUpdate(BURNING_STEPPES)
-    SendUpdate(EASTERN_PLAGUELANDS)
-    SendUpdate(SILITHUS)
-    
-    print("Broadcasting timers to all party and guild members")
 end
 
 function HandleCmdClear(args)
@@ -66,5 +57,32 @@ function HandleCmdClear(args)
         timers[zone] = nil
 
         print("Cleared timer for "..zone)
+    end
+end
+
+function HandleCmdBroadcast(args)
+    SendUpdate(WINTERSPRING)
+    SendUpdate(BURNING_STEPPES)
+    SendUpdate(EASTERN_PLAGUELANDS)
+    SendUpdate(SILITHUS)
+    
+    print("Broadcasting timers to all party and guild members")
+end
+
+function HandleCmdRequest(args)
+    local zone = string.match(args, "request (%a+%s*%a*)")
+    zone = ValidateZone(zone)
+
+    if zone == ALL then
+        SendRequest(WINTERSPRING)
+        SendRequest(BURNING_STEPPES)
+        SendRequest(EASTERN_PLAGUELANDS)
+        SendRequest(SILITHUS)
+
+        print("Requesting all timers from guild/party")
+    else
+        SendRequest(zone)
+
+        print("Requesting timer for "..zone.." from guild/party")
     end
 end

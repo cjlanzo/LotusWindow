@@ -52,11 +52,31 @@ function CalculateTimer(hours, minutes)
 end
 
 function UpdateTimerForZone(zone, timer)
+	local date = os.date("*t") -- possibly time zone issues here?
+	local hour, minute, second = date.hour, date.min, date.sec
+	local year, month, day = date.year, date.month, date.wday
+	local datestamp = string.format("%d%d%d%d%d%d", year, month, day, hour, minute, second)
+	local updated = tonumber(datestamp)
+
 	timers[zone] = timer
+	lastUpdated[zone] = updated
+end
+
+local function CreateVersionedPrefix(prefix)
+	return string.format("%s:%s", prefix, ADDON_VERSION)
 end
 
 function SendUpdate(zone)
-	local exportStr = string.format("%s:%d", zone, timers[zone])
-	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "GUILD")
-	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "PARTY")
+	local exportStr = string.format("%s:%d:%d", zone, timers[zone], lastUpdated[zone])
+	local versionedPrefix = CreateVersionedPrefix(MAIN_PREFIX)
+	
+	C_ChatInfo.SendAddonMessage(versionedPrefix, exportStr, "GUILD")
+	C_ChatInfo.SendAddonMessage(versionedPrefix, exportStr, "PARTY")
+end
+
+function SendRequest(zone)
+	local versionedPrefix = CreateVersionedPrefix(REQUEST_PREFIX)
+
+	C_ChatInfo.SendAddonMessage(versionedPrefix, zone, "GUILD")
+	C_ChatInfo.SendAddonMessage(versionedPrefix, zone, "PARTY")
 end
