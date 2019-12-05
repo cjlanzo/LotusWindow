@@ -51,15 +51,21 @@ function CalculateTimer(hours, minutes)
 	return (hours * 60) + minutes
 end
 
+function GetDateAsStr()
+	return date("%y-%m-%d-%H-%M-%S")
+end
+
 function UpdateTimerForZone(zone, timer)
-	local date = date("%y-%m-%d-%H-%M-%S")
+	local date = GetDateAsStr()
 
 	timers[zone] = timer
 	lastUpdated[zone] = date
 end
 
 function SendUpdate(zone)
-	local exportStr = string.format("%s:%s:%d:%s", ADDON_VERSION, zone, timers[zone], lastUpdated[zone])
+	local timer = timers[zone] ~= nil and timers[zone] or "_"
+	local lastUpdated = lastUpdated[zone] ~= nil and lastUpdated[zone] or "_"
+	local exportStr = string.format("%s:%s:%d:%s", ADDON_VERSION, zone, timer, lastUpdated)
 	
 	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "GUILD")
 	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "PARTY")

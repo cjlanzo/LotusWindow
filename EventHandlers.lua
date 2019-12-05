@@ -41,7 +41,9 @@ function HandleChatMsgAddon(...)
             if major > currentMajor then
                 print("Incoming addon message uses an incompatible version of LotusWindow")
             else 
-                local zone, timer, updated = string.match(payload, "[%d%.]+:(%a+%s*%a*):([%d-]+):([%d-]+)")
+                local zone, timer, updated = string.match(payload, "[%d%.]+:(%a+%s*%a*):([%d-_]+):([%d-_]+)")
+                timer = timer ~= "_" and timer or nil
+                updated = updated ~= "_" and updated or GetDateAsStr()
 
                 if IsMoreRecent(updated, lastUpdated[zone]) then
                     timers[zone] = timer
