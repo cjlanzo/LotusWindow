@@ -75,6 +75,9 @@ end
 function IsMoreRecent(date1, date2)
 
 	local function CompareDate(date1, date2)
+		if #date1 ~= #date2 then
+			return false
+		end
 		if #date1 == 0 then 
 			return false
 		end
@@ -87,10 +90,14 @@ function IsMoreRecent(date1, date2)
 		elseif val2 > val1 then
 			return false
 		else
+			if #date1 < 4 then
+				return false
+			end
+
 			local rem1 = string.sub(date1, 4, #date1)
 			local rem2 = string.sub(date2, 4, #date2)
 
-			CompareDate(rem1, rem2)
+			return CompareDate(rem1, rem2)
 		end
 
 	end
