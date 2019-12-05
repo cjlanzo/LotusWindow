@@ -89,3 +89,7 @@ function HandleCmdRequest(args)
         print("Requesting timer for "..zone.." from guild/party")
     end
 end
+
+function HandleCmdVersion()
+    print(string.format("LW Version: %s", ADDON_VERSION))
+end

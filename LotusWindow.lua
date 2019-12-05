@@ -10,6 +10,7 @@ local function PrintUsage()
 	print("/lw clear [all|zone] - Clears the timer for the specified zone")
 	print("/lw broadcast - Broadcasts all timers to the guild and party")
 	print("/lw request [all|zone] - Requests others to share their timers with you. Can specify a single zone if you don't want them all")
+	print("/lw version - Outputs the current version of LotusWindow")
 end
 
 local function HandleSlashCommands(args)
@@ -25,6 +26,8 @@ local function HandleSlashCommands(args)
 		HandleCmdBroadcast(args)
 	elseif string.find(args, "request") then
 		HandleCmdRequest(args)
+	elseif args == "version" then
+		HandleCmdVersion()
 	else
 		PrintUsage()
 	end
