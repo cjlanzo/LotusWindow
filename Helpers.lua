@@ -52,29 +52,24 @@ function CalculateTimer(hours, minutes)
 end
 
 function UpdateTimerForZone(zone, timer)
-	local date = date("%y:%m:%d:%H:%M:%S")
+	local date = date("%y-%m-%d-%H-%M-%S")
 
 	timers[zone] = timer
 	lastUpdated[zone] = date
 end
 
-local function CreateVersionedPrefix(prefix)
-	return string.format("%s:%s", prefix, ADDON_VERSION)
-end
-
 function SendUpdate(zone)
-	local exportStr = string.format("%s:%d:%d", zone, timers[zone], lastUpdated[zone])
-	local versionedPrefix = CreateVersionedPrefix(MAIN_PREFIX)
+	local exportStr = string.format("%s:%s:%d:%s", ADDON_VERSION, zone, timers[zone], lastUpdated[zone])
 	
-	C_ChatInfo.SendAddonMessage(versionedPrefix, exportStr, "GUILD")
-	C_ChatInfo.SendAddonMessage(versionedPrefix, exportStr, "PARTY")
+	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "GUILD")
+	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "PARTY")
 end
 
 function SendRequest(zone)
-	local versionedPrefix = CreateVersionedPrefix(REQUEST_PREFIX)
+	local requestStr = string.format("%s:%s", ADDON_VERSION, zone)
 
-	C_ChatInfo.SendAddonMessage(versionedPrefix, zone, "GUILD")
-	C_ChatInfo.SendAddonMessage(versionedPrefix, zone, "PARTY")
+	C_ChatInfo.SendAddonMessage(REQUEST_PREFIX, requestStr, "GUILD")
+	C_ChatInfo.SendAddonMessage(REQUEST_PREFIX, requestStr, "PARTY")
 end
 
 function IsMoreRecent(date1, date2)

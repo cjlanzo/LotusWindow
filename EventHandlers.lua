@@ -15,31 +15,34 @@ function HandleChatMsgLoot(args)
     end
 end
 
-function HandleChatMsgAddon(args)
+
+function HandleChatMsgAddon(...)
     local function GetVersionComponents(version)
         return string.match(version, "(%d+).(%d+).(%d+)")
     end
-
+    
     local function ConvertVersionToNumber(version)
         return tonumber(string.format("%d%d%d", GetVersionComponents(version)))
     end
 
-    local prefix, payload, _, sender = args
-    local addonPrefix, incomingVersion = string.match(prefix, "([%a-]+):([%d.]+)")
-    local major, minor, patch = GetVersionComponents(incomingVersion)
+    local prefix, payload, _, sender = ...
+
+    local version = string.match(payload, "([%d%.]+):")
+    local zone, timer, updated = string.match(payload, "[%d%.]+:(%a+%s*%a*):([%d-]+):([%d-]+)")
+    local major, minor, patch = GetVersionComponents(version)
     local currentMajor, currentMinor, currentPatch = GetVersionComponents(ADDON_VERSION)
 
-    if -displayedUpdateMessage and ConvertVersionToNumber(incomingVersion) > ConvertVersionToNumber(ADDON_VERSION) then
+    if (displayedUpdateMessage == false) and (ConvertVersionToNumber(version) > ConvertVersionToNumber(ADDON_VERSION)) then
         displayedUpdateMessage = true
         print("An update for LotusWindow is available")
     end
 
-    if addonPrefix == MAIN_PREFIX then
+    if prefix == MAIN_PREFIX then
         if major > currentMajor then
             print("Incoming addon message uses an incompatible version of LotusWindow")
         else 
-            local zone, timer, updated = string.match(payload, "(%a+%s*%a*):([%d-]+):([%d:]+)")
-            
+            local zone, timer, updated = string.match(payload, "[%d%.]+:(%a+%s*%a*):([%d-]+):([%d-]+)")
+
             if IsMoreRecent(updated, lastUpdated[zone]) then
                 timers[zone] = timer
                 lastUpdated[zone] = updated
@@ -48,8 +51,8 @@ function HandleChatMsgAddon(args)
                 print("Lotus timer updated by "..sender)
             end
         end
-    elseif addonPrefix == REQUEST_PREFIX then
-        local zone = payload
+    elseif prefix == REQUEST_PREFIX then
+        local zone = string.match(payload, "[%d%.]+:(%a+%s*%a*)")
 
         SendUpdate(zone)
         print("Update for "..zone.." requested by "..sender)
