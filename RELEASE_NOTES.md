@@ -1,3 +1,11 @@
+## 3.0.2 (12/05/2019)
+
+- Broadcasting/requesting bug fixes
+
+## 3.0.1 (12/05/2019)
+
+- Broadcasting and general bug fixes
+
 ## 3.0.0 (12/05/2019)
 
 - Added code to notify user that an update is available
