@@ -38,7 +38,7 @@ function HandleChatMsgAddon(...)
                 timer = timer ~= "_" and timer or nil
                 updated = updated ~= "_" and updated or GetDateAsStr()
 
-                if updated > lastUpdated[zone] then
+                if lastUpdated[zone] == nil or updated > lastUpdated[zone] then
                     timers[zone] = timer
                     lastUpdated[zone] = updated
 
