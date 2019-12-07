@@ -30,7 +30,7 @@ function DisplayTimerForZone(zone)
 			cache[timer] = { open, close }
 		end
 
-		print(zone.." - Picked "..ConvertTimerToDisplay(timer).." - Opens "..ConvertTimerToDisplay(open).." - Closes "..ConvertTimerToDisplay(close))
+		print(zone.." - Picked: "..ConvertTimerToDisplay(timer).." - Opens: "..ConvertTimerToDisplay(open).." - Closes: "..ConvertTimerToDisplay(close))
 	else
 		print("You do not have the timer for "..zone)
 	end
@@ -67,8 +67,8 @@ function SendUpdate(zone)
 	local lastUpdated = lastUpdated[zone] ~= nil and lastUpdated[zone] or "_"
 	local exportStr = string.format("%s:%s:%d:%s", ADDON_VERSION, zone, timer, lastUpdated)
 	
-	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "GUILD")
-	C_ChatInfo.SendAddonMessage(MAIN_PREFIX, exportStr, "PARTY")
+	C_ChatInfo.SendAddonMessage(UPDATE_PREFIX, exportStr, "GUILD")
+	C_ChatInfo.SendAddonMessage(UPDATE_PREFIX, exportStr, "PARTY")
 end
 
 function SendRequest(zone)
@@ -76,37 +76,4 @@ function SendRequest(zone)
 
 	C_ChatInfo.SendAddonMessage(REQUEST_PREFIX, requestStr, "GUILD")
 	C_ChatInfo.SendAddonMessage(REQUEST_PREFIX, requestStr, "PARTY")
-end
-
-function IsMoreRecent(date1, date2)
-
-	local function CompareDate(date1, date2)
-		if #date1 ~= #date2 then
-			return false
-		end
-		if #date1 == 0 then 
-			return false
-		end
-		
-		local val1 = tonumber(string.sub(date1, 1, 2))
-		local val2 = tonumber(string.sub(date2, 1, 2))
-
-		if val1 > val2 then
-			return true
-		elseif val2 > val1 then
-			return false
-		else
-			if #date1 < 4 then
-				return false
-			end
-
-			local rem1 = string.sub(date1, 4, #date1)
-			local rem2 = string.sub(date2, 4, #date2)
-
-			return CompareDate(rem1, rem2)
-		end
-
-	end
-	
-	return CompareDate(date1, date2)
 end

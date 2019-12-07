@@ -1,3 +1,7 @@
+# 3.1.0 (12/07/2019)
+
+- Simplified how timers and versions are compared
+
 ## 3.0.2 (12/05/2019)
 
 - Broadcasting/requesting bug fixes

@@ -15,12 +15,8 @@ function HandleChatMsgLoot(args)
     end
 end
 
-local function GetVersionComponents(version)
-    return string.match(version, "(%d+).(%d+).(%d+)")
-end
-
-local function ConvertVersionToNumber(version)
-    return tonumber(string.format("%d%d%d", GetVersionComponents(version)))
+local function GetMajorVersion(version)
+    return string.match(version, "(%d+).")
 end
 
 function HandleChatMsgAddon(...)
@@ -28,24 +24,21 @@ function HandleChatMsgAddon(...)
 
     if string.find(prefix, "lw") then
         local version = string.match(payload, "([%d%.]+):")
-        local zone, timer, updated = string.match(payload, "[%d%.]+:(%a+%s*%a*):([%d-]+):([%d-]+)")
-        local major, minor, patch = GetVersionComponents(version)
-        local currentMajor, currentMinor, currentPatch = GetVersionComponents(ADDON_VERSION)
 
-        if (displayedUpdateMessage == false) and (ConvertVersionToNumber(version) > ConvertVersionToNumber(ADDON_VERSION)) then
+        if (displayedUpdateMessage == false) and (version > ADDON_VERSION) then
             displayedUpdateMessage = true
             print("An update for LotusWindow is available")
         end
 
-        if prefix == MAIN_PREFIX then
-            if major > currentMajor then
-                print("Incoming addon message uses an incompatible version of LotusWindow")
+        if prefix == UPDATE_PREFIX then
+            if GetMajorVersion(version) > GetMajorVersion(ADDON_VERSION) then
+                print(string.format("Incoming addon message from %s uses an incompatible version of LotusWindow. Please update!", sender))
             else 
                 local zone, timer, updated = string.match(payload, "[%d%.]+:(%a+%s*%a*):([%d-_]+):([%d-_]+)")
                 timer = timer ~= "_" and timer or nil
                 updated = updated ~= "_" and updated or GetDateAsStr()
 
-                if IsMoreRecent(updated, lastUpdated[zone]) then
+                if updated > lastUpdated[zone] then
                     timers[zone] = timer
                     lastUpdated[zone] = updated
 
