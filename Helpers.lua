@@ -62,13 +62,13 @@ function UpdateTimerForZone(zone, timer)
 	lastUpdated[zone] = date
 end
 
-function SendUpdate(zone)
+function SendUpdate(prefix, zone)
 	local timer = timers[zone] ~= nil and timers[zone] or "_"
 	local lastUpdated = lastUpdated[zone] ~= nil and lastUpdated[zone] or "_"
 	local exportStr = string.format("%s:%s:%d:%s", ADDON_VERSION, zone, timer, lastUpdated)
 	
-	C_ChatInfo.SendAddonMessage(UPDATE_PREFIX, exportStr, "GUILD")
-	C_ChatInfo.SendAddonMessage(UPDATE_PREFIX, exportStr, "PARTY")
+	C_ChatInfo.SendAddonMessage(prefix, exportStr, "GUILD")
+	C_ChatInfo.SendAddonMessage(prefix, exportStr, "PARTY")
 end
 
 function SendRequest(zone)

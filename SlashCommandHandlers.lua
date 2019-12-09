@@ -33,7 +33,7 @@ function HandleCmdUpdate(args)
     end
 
     UpdateTimerForZone(zone, timer)
-    SendUpdate(zone)
+    SendUpdate(UPDATE_PREFIX, zone)
     DisplayTimerForZone(zone)
 end
 
@@ -41,7 +41,7 @@ function HandleCmdAdjust(args)
     local zone, minutes = string.match(args, "adjust (%a+%s*%a*) ([%d-]+)")
     zone = ValidateZone(zone)
     UpdateTimerForZone(zone, (timers[zone] + minutes))
-    SendUpdate(zone)
+    SendUpdate(UPDATE_PREFIX, zone)
     DisplayTimerForZone(zone)
 end
 
@@ -64,10 +64,10 @@ function HandleCmdClear(args)
 end
 
 function HandleCmdBroadcast(args)
-    SendUpdate(WINTERSPRING)
-    SendUpdate(BURNING_STEPPES)
-    SendUpdate(EASTERN_PLAGUELANDS)
-    SendUpdate(SILITHUS)
+    SendUpdate(UPDATE_PREFIX, WINTERSPRING)
+    SendUpdate(UPDATE_PREFIX, BURNING_STEPPES)
+    SendUpdate(UPDATE_PREFIX, EASTERN_PLAGUELANDS)
+    SendUpdate(UPDATE_PREFIX, SILITHUS)
     
     print("Broadcasting timers to all party and guild members")
 end

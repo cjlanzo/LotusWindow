@@ -1,3 +1,7 @@
+# 3.2.0 (12/09/2019)
+
+- Will now only send updates specifically to people that request them
+
 # 3.1.0 (12/07/2019)
 
 - Simplified how timers and versions are compared

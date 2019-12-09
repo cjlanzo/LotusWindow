@@ -2,6 +2,9 @@ function HandlePlayerLogin()
     for i = 1, #ADDON_PREFIXES do
         C_ChatInfo.RegisterAddonMessagePrefix(ADDON_PREFIXES[i])
     end
+
+    local name, realm = UnitName("player")
+    C_ChatInfo.RegisterAddonMessagePrefix(string.format("%s:%s", UPDATE_PREFIX, name))
 end
 
 function HandleChatMsgLoot(args)
@@ -10,7 +13,7 @@ function HandleChatMsgLoot(args)
         local timer = CalculateTimer(GetGameTime())
 
         UpdateTimerForZone(zone, timer)
-        SendUpdate(zone)
+        SendUpdate(UPDATE_PREFIX, zone)
         DisplayTimerForZone(zone)
     end
 end
@@ -48,8 +51,10 @@ function HandleChatMsgAddon(...)
             end
         elseif prefix == REQUEST_PREFIX then
             local zone = string.match(payload, "[%d%.]+:(%a+%s*%a*)")
+            local serverlessSender = string.match(sender, "(%a+)-%a+")
+            local specificPrefix = string.format("%s:%s", UPDATE_PREFIX, serverlessSender)
 
-            SendUpdate(zone)
+            SendUpdate(specificPrefix, zone)
             print("Update for "..zone.." requested by "..sender)
         end
     end
