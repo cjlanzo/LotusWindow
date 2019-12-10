@@ -1,6 +1,6 @@
-## Interface: 11200
+## Interface: 11320
 ## Title: LotusWindow
-## Version: 3.2.0
+## Version: 4.0.0
 ## Notes: An addon for tracking the Lotus spawn timers
 ## Author: Voodoomoose
 ## SavedVariables: timers, lastUpdated

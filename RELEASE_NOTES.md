@@ -1,6 +1,8 @@
-# 3.2.0 (12/09/2019)
+# 4.0.0 (12/10/2019)
 
 - Will now only send updates specifically to people that request them
+- Fixed issue where accepting a trade of a lotus or getting a lotus from a mailbox outside of a zone with lotus would result in a timer being updated
+- Fixed issue where broadcast/request were not working due to issues with time zones
 
 # 3.1.0 (12/07/2019)
 

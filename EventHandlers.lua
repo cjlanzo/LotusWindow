@@ -9,7 +9,7 @@ end
 
 function HandleChatMsgLoot(args)
     if string.find(args, "Black Lotus") then
-        local zone = GetRealZoneText()
+        local zone = ValidateZone(GetRealZoneText())
         local timer = CalculateTimer(GetGameTime())
 
         UpdateTimerForZone(zone, timer)

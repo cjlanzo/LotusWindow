@@ -57,9 +57,23 @@ end
 
 function UpdateTimerForZone(zone, timer)
 	local date = GetDateAsStr()
+	local serverHour = GetGameTime()
+
+	local year, month, day, hour, min, sec = string.match(date, "(%d+)-(%d+)-(%d+)-(%d+)-(%d+)-(%d+)")
+	local timeDif = hour - serverHour
+	local dayAdjustment = 0
+
+	if timeDif < SERVER_MIN_TIME_ZONE_OFFSET then
+		dayAdjustment = -1
+	elseif timeDif > SERVER_MAX_TIME_ZONE_OFFSET then
+		dayAdjustment = 1
+	end
+
+	-- can be bug where month and year should uptick - don't think this will cause any errors tho, would just save invalid dates that still compute correctly
+	local serverAdjustedDate = string.format("%d-%d-%d-%d-%d-%d", year, month, (day + dayAdjustment), serverHour, min, sec)
 
 	timers[zone] = timer
-	lastUpdated[zone] = date
+	lastUpdated[zone] = serverAdjustedDate
 end
 
 function SendUpdate(prefix, zone)
