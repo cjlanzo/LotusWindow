@@ -1,3 +1,7 @@
+# 4.0.1 (12/11/2019)
+
+- Updated game version
+
 # 4.0.0 (12/10/2019)
 
 - Will now only send updates specifically to people that request them
